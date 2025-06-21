@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { pages } from './UI'
-import { BoxGeometry, Float32BufferAttribute, Uint16BufferAttribute, Vector3 } from 'three';
+import { Bone, BoxGeometry, Float32BufferAttribute, Skeleton, SkinnedMesh, Uint16BufferAttribute, Vector3 } from 'three';
 
 const PAGE_WIDTH = 12.8;
 const PAGE_HEIGHT = 17.1;
@@ -43,10 +43,33 @@ pageGeometry.setAttribute(
   new Float32BufferAttribute(skinWeights, 4)
 );
 
-
 function Page({number, front, back, ...props}) {
   
   const group = useRef()
+
+  const manualSkinnedMesh = useMemo(() => {
+    const bones = [];
+    for (let i = 0; i <= PAGE_SEGMENTS; i++) {
+      let bone = new Bone();
+      bones.push(bone);
+      if(i === 0) {
+        bone.position.x = 0;
+      } else {
+        bone.position.x = SEGMENT_WIDTH;
+      }
+      if(i > 0) {
+        bone(i - 1).add(bone);
+      }
+    }
+    const skeleton = new Skeleton(bones);
+    const materials = pagematerials;
+    const mesh = new SkinnedMesh(pageGeometry, materials);
+    mesh.castShadow = true;
+    mesh.receiveShadow = false;
+    mesh.add(skeleton.bones[0]);
+    mesh.bind(skeleton);
+    return mesh;
+  }, [])
 
   return (
     <group {...props} ref={group}>
