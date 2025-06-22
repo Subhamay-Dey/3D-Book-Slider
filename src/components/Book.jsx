@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react'
 import { pages } from './UI'
-import { Bone, BoxGeometry, Float32BufferAttribute, Skeleton, SkinnedMesh, Uint16BufferAttribute, Vector3 } from 'three';
+import { Bone, BoxGeometry, Color, Float32BufferAttribute, MeshStandardMaterial, Skeleton, SkinnedMesh, Uint16BufferAttribute, Vector3 } from 'three';
 
 const PAGE_WIDTH = 12.8;
 const PAGE_HEIGHT = 17.1;
@@ -43,9 +43,34 @@ pageGeometry.setAttribute(
   new Float32BufferAttribute(skinWeights, 4)
 );
 
+const whiteColor = new Color("white");
+
+const pageMaterials = [
+  new MeshStandardMaterial({
+    color: whiteColor,
+  }),
+  new MeshStandardMaterial({
+    color: "#111",
+  }),
+  new MeshStandardMaterial({
+    color: whiteColor,
+  }),
+  new MeshStandardMaterial({
+    color: whiteColor,
+  }),
+  new MeshStandardMaterial({
+    color: "pink",
+  }),
+  new MeshStandardMaterial({
+    color: "blue",
+  }),
+];
+
 function Page({number, front, back, ...props}) {
   
   const group = useRef()
+
+  const skinnedMeshRef = useRef();
 
   const manualSkinnedMesh = useMemo(() => {
     const bones = [];
@@ -62,7 +87,7 @@ function Page({number, front, back, ...props}) {
       }
     }
     const skeleton = new Skeleton(bones);
-    const materials = pagematerials;
+    const materials = pageMaterials;
     const mesh = new SkinnedMesh(pageGeometry, materials);
     mesh.castShadow = true;
     mesh.receiveShadow = false;
@@ -73,10 +98,7 @@ function Page({number, front, back, ...props}) {
 
   return (
     <group {...props} ref={group}>
-      <mesh scale={0.1}>
-        <primitive object={pageGeometry} attach={""}/>
-        <meshBasicMaterial color={"red"}/>
-      </mesh>
+      <primitive object={manualSkinnedMesh} ref={skinnedMeshRef}/>
     </group>
   )
 }
