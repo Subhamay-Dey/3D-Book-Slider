@@ -43,7 +43,7 @@ pageGeometry.setAttribute(
   new Float32BufferAttribute(skinWeights, 4)
 );
 
-const whiteColor = new Color("white");
+const whiteColor = new Color("white")
 
 const pageMaterials = [
   new MeshStandardMaterial({
