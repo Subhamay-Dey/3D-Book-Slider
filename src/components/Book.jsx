@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react'
 import { pages } from './UI'
-import { Bone, BoxGeometry, Color, Float32BufferAttribute, MeshStandardMaterial, Skeleton, SkinnedMesh, Uint16BufferAttribute, Vector3 } from 'three';
+import { Bone, BoxGeometry, Color, Float32BufferAttribute, MeshStandardMaterial, Skeleton, SkeletonHelper, SkinnedMesh, Uint16BufferAttribute, Vector3 } from 'three';
+import { useHelper } from '@react-three/drei';
 
 const PAGE_WIDTH = 12.8;
 const PAGE_HEIGHT = 17.1;
@@ -95,6 +96,8 @@ function Page({number, front, back, ...props}) {
     mesh.bind(skeleton);
     return mesh;
   }, [])
+
+  useHelper(skinnedMeshRef, SkeletonHelper, "red");
 
   return (
     <group {...props} ref={group}>
