@@ -84,7 +84,7 @@ function Page({number, front, back, ...props}) {
         bone.position.x = SEGMENT_WIDTH;
       }
       if(i > 0) {
-        bone(i - 1).add(bone);
+        bone(i - 1).add(bone)
       }
     }
     const skeleton = new Skeleton(bones);
