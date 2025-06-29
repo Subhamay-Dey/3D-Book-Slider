@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react'
 import { pages } from './UI'
-import { Bone, BoxGeometry, Color, Float32BufferAttribute, MeshStandardMaterial, Skeleton, SkeletonHelper, SkinnedMesh, Uint16BufferAttribute, Vector3 } from 'three';
+import { Bone, BoxGeometry, Color, Float32BufferAttribute, MeshStandardMaterial, Skeleton, SkeletonHelper, SkinnedMesh, SRGBColorSpace, Uint16BufferAttribute, Vector3 } from 'three';
 import { useHelper, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { degToRad } from 'three/src/math/MathUtils.js';
@@ -63,6 +63,12 @@ const pageMaterials = [
   }),
 ];
 
+pages.forEach((page) => {
+  useTexture.preload(`/textures/${page.front}.jpg`);
+  useTexture.preload(`/textures/${page.back}.jpg`);
+  useTexture.preload(`/textures/book-cover-roughnwss.jpg`);
+})
+
 function Page({number, front, back, ...props}) {
 
   const [picture, picture2, pictureRoughness] = useTexture([
@@ -72,6 +78,8 @@ function Page({number, front, back, ...props}) {
       [`textures/book-cover-roughnwss.jpg`]
       : []),
   ])
+
+  picture.colorSpace = picture2.colorSpace = SRGBColorSpace;
   
   const group = useRef()
 
