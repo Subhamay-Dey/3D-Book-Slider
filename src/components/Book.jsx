@@ -61,12 +61,6 @@ const pageMaterials = [
   new MeshStandardMaterial({
     color: whiteColor,
   }),
-  new MeshStandardMaterial({
-    color: "pink",
-  }),
-  new MeshStandardMaterial({
-    color: "blue",
-  }),
 ];
 
 function Page({number, front, back, ...props}) {
@@ -90,7 +84,26 @@ function Page({number, front, back, ...props}) {
       }
     }
     const skeleton = new Skeleton(bones);
-    const materials = pageMaterials;
+    const materials = [...pageMaterials, 
+      new MeshStandardMaterial({
+        color: whiteColor,
+        map: picture,
+        ...(number === 0 ? {
+          roughnessMap: pictureRoughness,
+        } : {
+          roughness: 0.1,
+        }),
+      }),
+      new MeshStandardMaterial({
+        color: whiteColor,
+        map: picture2,
+        ...(number === pages.length - 1 ? {
+          roughnessMap: pictureRoughness,
+        } : {
+          roughness: 0.1,
+        }), 
+      })
+    ];
     const mesh = new SkinnedMesh(pageGeometry, materials);
     mesh.castShadow = true;
     mesh.receiveShadow = false;
