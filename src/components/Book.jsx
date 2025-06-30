@@ -1,9 +1,10 @@
 import React, { useMemo, useRef } from 'react'
-import { pages } from './UI'
+import { pageAtom, pages } from './UI'
 import { Bone, BoxGeometry, Color, Float32BufferAttribute, MeshStandardMaterial, Skeleton, SkeletonHelper, SkinnedMesh, SRGBColorSpace, Uint16BufferAttribute, Vector3 } from 'three';
 import { useHelper, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { degToRad } from 'three/src/math/MathUtils.js';
+import { useAtom } from 'jotai';
 
 const PAGE_WIDTH = 12.8;
 const PAGE_HEIGHT = 17.1;
@@ -69,7 +70,7 @@ pages.forEach((page) => {
   useTexture.preload(`/textures/book-cover-roughness.jpg`);
 })
 
-function Page({number, front, back, ...props}) {
+function Page({number, front, back, page, ...props}) {
 
   const [picture, picture2, pictureRoughness] = useTexture([
     `/textures/${front}.jpg`,
@@ -96,10 +97,11 @@ function Page({number, front, back, ...props}) {
         bone.position.x = SEGMENT_WIDTH;
       }
       // if(i > 0) {
-      //   bone(i - 1).add(bone)
+      //   bones(i - 1).add(bone);
       // }
     }
     const skeleton = new Skeleton(bones);
+
     const materials = [...pageMaterials, 
       new MeshStandardMaterial({
         color: whiteColor,
@@ -122,13 +124,14 @@ function Page({number, front, back, ...props}) {
     ];
     const mesh = new SkinnedMesh(pageGeometry, materials);
     mesh.castShadow = true;
-    mesh.receiveShadow = false;
+    mesh.receiveShadow = true;
+    mesh.frustumCulled = false;
     mesh.add(skeleton.bones[0]);
     mesh.bind(skeleton);
     return mesh;
   }, [])
 
-  useHelper(skinnedMeshRef, SkeletonHelper, "red");
+  // useHelper(skinnedMeshRef, SkeletonHelper, "red");
 
   useFrame(() => {
 
@@ -136,27 +139,34 @@ function Page({number, front, back, ...props}) {
       return;
     }
 
-    const bones = skinnedMeshRef.current.skeleton.bones;
+    // const bones = skinnedMeshRef.current.skeleton.bones;
 
-    bones[2].rotation.y = degToRad(40);
-    bones[2].position.x = degToRad(10);
-    bones[2].position.y = degToRad(-50);
+    // bones[2].rotation.y = degToRad(40);
+    // bones[2].position.x = degToRad(10);
+    // bones[2].position.y = degToRad(-50);
   })
 
   return (
     <group {...props} ref={group}>
-      <primitive object={manualSkinnedMesh} ref={skinnedMeshRef}/>
+      <primitive 
+        object={manualSkinnedMesh} 
+        ref={skinnedMeshRef}
+        position-z={-number * PAGE_DEPTH + page * PAGE_DEPTH}
+      />
     </group>
   )
 }
 
 function Book({...props}) {
+
+  const [page] = useAtom(pageAtom);
+
   return (
     <group {...props}>
       {
-        [...pages].map((pageData, index) => index === 0 ? (
-          <Page position-x={index * 0.15} key={index} number={index} {...pageData}/>
-        ) : null)
+        [...pages].map((pageData, index) =>
+          <Page key={index} page={page} number={index} {...pageData}/>
+        )
       }
     </group>
   )
