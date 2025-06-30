@@ -3,7 +3,7 @@ import Book from "./Book";
 export const Experience = () => {
   return (
     <>
-    <Book/>
+      <Book/>
       <OrbitControls />
       <Environment preset="studio"></Environment>
       <directionalLight

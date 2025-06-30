@@ -66,7 +66,7 @@ const pageMaterials = [
 pages.forEach((page) => {
   useTexture.preload(`/textures/${page.front}.jpg`);
   useTexture.preload(`/textures/${page.back}.jpg`);
-  useTexture.preload(`/textures/book-cover-roughnwss.jpg`);
+  useTexture.preload(`/textures/book-cover-roughness.jpg`);
 })
 
 function Page({number, front, back, ...props}) {
@@ -75,7 +75,7 @@ function Page({number, front, back, ...props}) {
     `/textures/${front}.jpg`,
     `/textures/${back}.jpg`,
     ...(number === 0 || number === pages.length -1 ? 
-      [`textures/book-cover-roughnwss.jpg`]
+      [`textures/book-cover-roughness.jpg`]
       : []),
   ])
 
@@ -95,9 +95,9 @@ function Page({number, front, back, ...props}) {
       } else {
         bone.position.x = SEGMENT_WIDTH;
       }
-      if(i > 0) {
-        bone(i - 1).add(bone)
-      }
+      // if(i > 0) {
+      //   bone(i - 1).add(bone)
+      // }
     }
     const skeleton = new Skeleton(bones);
     const materials = [...pageMaterials, 
