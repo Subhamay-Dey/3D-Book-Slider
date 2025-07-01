@@ -6,8 +6,8 @@ import { useFrame } from '@react-three/fiber';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { useAtom } from 'jotai';
 
-const PAGE_WIDTH = 12.8;
-const PAGE_HEIGHT = 17.1;
+const PAGE_WIDTH = 1.28;
+const PAGE_HEIGHT = 1.71;
 const PAGE_DEPTH = 0.003;
 const PAGE_SEGMENTS =  30;
 const SEGMENT_WIDTH = PAGE_WIDTH / PAGE_SEGMENTS;
@@ -164,8 +164,8 @@ function Book({...props}) {
   return (
     <group {...props}>
       {
-        [...pages].map((pageData, index) =>
-          <Page key={index} page={page} number={index} {...pageData}/>
+        [...pages].map((pageData, index) => index === 0 ? (
+          <Page key={index} page={page} number={index} {...pageData}/>) : null
         )
       }
     </group>
