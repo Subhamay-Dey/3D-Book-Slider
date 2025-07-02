@@ -131,7 +131,7 @@ function Page({number, front, back, page, ...props}) {
     return mesh;
   }, [])
 
-  // useHelper(skinnedMeshRef, SkeletonHelper, "red");
+  useHelper(skinnedMeshRef, SkeletonHelper, "red");
 
   useFrame(() => {
 
@@ -139,11 +139,11 @@ function Page({number, front, back, page, ...props}) {
       return;
     }
 
-    // const bones = skinnedMeshRef.current.skeleton.bones;
+    const bones = skinnedMeshRef.current.skeleton.bones;
 
-    // bones[2].rotation.y = degToRad(40);
-    // bones[2].position.x = degToRad(10);
-    // bones[2].position.y = degToRad(-50);
+    bones[2].rotation.y = degToRad(40);
+    bones[2].position.x = degToRad(10);
+    bones[2].position.y = degToRad(-50);
   })
 
   return (
