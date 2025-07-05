@@ -140,10 +140,6 @@ function Page({number, front, back, page, ...props}) {
     }
 
     const bones = skinnedMeshRef.current.skeleton.bones;
-
-    bones[2].rotation.y = degToRad(40);
-    bones[2].position.x = degToRad(10);
-    bones[2].position.y = degToRad(-50);
   })
 
   return (
